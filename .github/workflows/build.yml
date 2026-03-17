@@ -29,6 +29,9 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release
 
+      - name: Set executable bit
+        run: chmod +x bin/Release/net9.0/Deej-AI/deej-ai.cpp/bin/deej-ai
+
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
@@ -56,6 +59,9 @@ jobs:
 
       - name: Build
         run: dotnet build --configuration Release
+
+      - name: Set executable bit
+        run: chmod +x bin/Release/net9.0/Deej-AI/deej-ai.cpp/bin/deej-ai
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
