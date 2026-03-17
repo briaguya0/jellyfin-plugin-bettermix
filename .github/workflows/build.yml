@@ -1,0 +1,64 @@
+name: Build
+
+on:
+  push:
+    branches: [main, feat-gh-actions]
+  pull_request:
+    branches: [main, feat-gh-actions]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build gcc g++ curl git
+
+      - name: Cache model
+        uses: actions/cache@v4
+        with:
+          path: deej-ai.onnx
+          key: deej-ai-model
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-x64
+          path: bin/Release/net9.0/
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Install dependencies
+        run: choco install ninja
+
+      - name: Cache model
+        uses: actions/cache@v4
+        with:
+          path: deej-ai.onnx
+          key: deej-ai-model
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-x64
+          path: bin/Release/net9.0/
